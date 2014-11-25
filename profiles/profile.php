@@ -5,51 +5,59 @@
 			}else{
 				$mayEdit=false;
 			}
-			$tpl->newBlock("profile");
-			open();			
-	
-			$personData=getPersondata($_GET['id']);
-			//kijkt of er een geboorte datum is
-			$needDate=true;
-			if(gettype($personData['geboortedatum'])=="NULL"){$needDate=false;}
-			//haalt alle evil tags uit alle waardes in de array
-			foreach ($personData as $key => $value){
-				$personData[$key]=removeeviltags($value);
+			if(!isset($_GET['id'])){
+				header("location:index.php");
 			}
-			//assignd alle waardes voor tpl
-			$tpl->assign("NAAM",$personData['voornaam']);
-			$tpl->assign("ACHTERNAAM", $personData['achternaam']);
-			$tpl->assign("ADRES",$personData['adres']);
-			//zorgt dat het alleen een datum doet als het er is
-			if($needDate){
-				$tpl->assign("GEBOORTEDATUM", date("M d Y H:i:s",$personData['geboortedatum']));
+			elseif($_GET['id']==null){
+				header("location:index.php");
 			}
-			$tpl->assign("MOBIEL", $personData['mobiel']);
-			$tpl->assign("TELEFOON", $personData['telefoon']);
-			$tpl->assign("WOONPLAATS",$personData['woonplaats']);
-			if($mayEdit){
-				$tpl->newBlock("edit");
-				$tpl->assign("ID", $_GET['id']);
-			}
-			$results=getPostsOfUser($_GET['id']);
-			foreach($results as $row)
-			{
-				//haalt alle html tags weg
-				foreach ($row as $key => $value){
-					$row[$key]=removeeviltags($value);
+			else{
+				$tpl->newBlock("profile");
+				open();			
+		
+				$personData=getPersondata($_GET['id']);
+				//kijkt of er een geboorte datum is
+				$needDate=true;
+				if(gettype($personData['geboortedatum'])=="NULL"){$needDate=false;}
+				//haalt alle evil tags uit alle waardes in de array
+				foreach ($personData as $key => $value){
+					$personData[$key]=removeeviltags($value);
 				}
-				$grav_url=getPicture($row['email']);
-				//assignd alle benodigde waardes
-				$tpl->newBlock("row");
-				$tpl->assign("PASSWORD",$row['pasword']);
-	    		$tpl->assign("LINK",$grav_url);
-	    		$tpl->assign("ID",$row['gebruikerId']);
-				$tpl->assign("POSTID",$row['postId']);
-		    	$tpl->assign("CONTENT",$row['content']);
-		    	$tpl->assign("DATE", date("M d Y H:i:s",$row['datum']));
-		    	$tpl->assign("USER", $row['voornaam']." ".$row['achternaam']);
+				//assignd alle waardes voor tpl
+				$tpl->assign("NAAM",$personData['voornaam']);
+				$tpl->assign("ACHTERNAAM", $personData['achternaam']);
+				$tpl->assign("ADRES",$personData['adres']);
+				//zorgt dat het alleen een datum doet als het er is
+				if($needDate){
+					$tpl->assign("GEBOORTEDATUM", date("M d Y H:i:s",$personData['geboortedatum']));
+				}
+				$tpl->assign("MOBIEL", $personData['mobiel']);
+				$tpl->assign("TELEFOON", $personData['telefoon']);
+				$tpl->assign("WOONPLAATS",$personData['woonplaats']);
+				if($mayEdit){
+					$tpl->newBlock("edit");
+					$tpl->assign("ID", $_GET['id']);
+				}
+				$results=getPostsOfUser($_GET['id']);
+				foreach($results as $row)
+				{
+					//haalt alle html tags weg
+					foreach ($row as $key => $value){
+						$row[$key]=removeeviltags($value);
+					}
+					$grav_url=getPicture($row['email']);
+					//assignd alle benodigde waardes
+					$tpl->newBlock("row");
+					$tpl->assign("PASSWORD",$row['pasword']);
+					$tpl->assign("LINK",$grav_url);
+					$tpl->assign("ID",$row['gebruikerId']);
+					$tpl->assign("POSTID",$row['postId']);
+					$tpl->assign("CONTENT",$row['content']);
+					$tpl->assign("DATE", date("M d Y H:i:s",$row['datum']));
+					$tpl->assign("USER", $row['voornaam']." ".$row['achternaam']);
+				}
+				$tpl->printToScreen();
 			}
-			$tpl->printToScreen();
 		}
 		function changeProfile($profileData,$id){
 			$birthdate=null;

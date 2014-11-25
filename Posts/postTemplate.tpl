@@ -6,7 +6,6 @@
 	</head>
 	<body>
 		<!-- START BLOCK : editPost -->
-			<p>test</p>
 			<form method="POST" action="index.php?actie=editPostt&id={ID}">
 				<p>
 					<label>content</label>
@@ -29,6 +28,7 @@
 			</form>
 		<!-- END BLOCK : editCommentForm -->
 		<!-- START BLOCK : table -->
+			<p><a href="index.php?actie=profile&id={ID}">your profile</a></p>
 			<form method="POST" action="index.php?actie=newPost">
 				<p>
 					<label>content</label>
@@ -59,7 +59,6 @@
 							<a href="index.php?actie=editPost&id={ID}">edit</a>
 						<!-- END BLOCK : edit -->
 						<!-- START BLOCK : comment -->
-							<p>commentid {COMMENTID}</p>
 							<div class="comment">
 								<div class="name">
 									<img src="{LINK}">

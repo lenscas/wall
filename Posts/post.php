@@ -5,6 +5,7 @@
 	function showWall($tpl){
 		global $pictures;
 		$tpl->newBlock("table");
+		$tpl->assign("ID",$_SESSION['id']);
 		open();
 		$results=getAllPosts();
 	
@@ -17,7 +18,6 @@
 			}
 			open();
 			$likes= getAmountLikes($row['postId'],"post");
-			print_r($likes);
 			//haalt avatar op van gravatr
 			$grav_url=getPicture($row['email']);
 			//assignd alle benodigde waardes
@@ -65,7 +65,7 @@
 					if(gettype($comment2)!='boolean'){
 						foreach ($comment2 as $key) {
 							open();
-							$likes2= getAmountLikes($key['key'],"comment");
+							$likes2= getAmountLikes($key['commentId'],"comment");
 							$saneText=  removeeviltags($key['content']);
 							$grav_url=getPicture($key['email']);
 							$tpl->newBlock("comment2");
@@ -74,9 +74,6 @@
 							$tpl->assign("CONTENT",$saneText);
 							$tpl->assign("DATE", date("M d Y H:i:s",$key['datum']));
 							$tpl->assign("USER", $key['voornaam']." ".$key['achternaam']);
-							$tpl->assign("COMMENTID",$key['commentId']);
-							echo $likes;
-							echo $key['commentId'];
 							$tpl->assign("LIKES",$likes2);
 							if($row['gebruikerId']==$_SESSION['id']or$_SESSION['group']==2){
 								$tpl->newBlock("editComment2");
