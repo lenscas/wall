@@ -11,6 +11,7 @@
 	require("other/gravatar.php");
 	require("other/timeStuff.php");
 	require("other/like.php");
+	require("other/emoticons.php");
 
 	$actie=null;
 	if(isset($_GET['actie'])){
@@ -39,13 +40,13 @@
 				changeProfile($_POST,$_GET['id']);
 			break;
 		case "register":
+
 			if(!isset($_POST['submit'])){
 				$tpl = new TemplatePower("./users/userTemplate.tpl");
 				$tpl->prepare();
 				usersNew($tpl);
 			} else{
 				usersCreateAccount($_POST);
-				header("location:index.php");
 			}
 			break;
 		case "logout":

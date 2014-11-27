@@ -16,6 +16,7 @@
 			foreach ($row as $key => $value){
 				$row[$key]=removeeviltags($value);
 			}
+			$row['content']=parsesmileys($row['content']);
 			open();
 			$likes= getAmountLikes($row['postId'],"post");
 			//haalt avatar op van gravatr
@@ -29,6 +30,7 @@
 	    	$tpl->assign("DATE", date("M d Y H:i:s",$row['datum']));
 	    	$tpl->assign("USER", $row['voornaam']." ".$row['achternaam']);
 			$tpl->assign("LIKES",$likes);
+			$tpl->assign("POSTID",$row['postId']);
 	    
 			if($row['gebruikerId']==$_SESSION['id']or$_SESSION['group']==2){
 	    		$tpl->newBlock("edit");
@@ -43,16 +45,19 @@
 				foreach ($comments as $key) {
 					open();
 					$likes= getAmountLikes($key['commentId'],"comment");
-					$saneText=  removeeviltags($key['content']);
+					$key=removeEviltagArray($key);
 					$grav_url=getPicture($key['email']);
+					$key['content']=parsesmileys($key['content']);
 					$tpl->newBlock("comment");
 					$tpl->assign("LINK",$grav_url);
 					$tpl->assign("POSTID",$key['id']);
-					$tpl->assign("CONTENT",$saneText);
+					$tpl->assign("CONTENT",$key['content']);
 					$tpl->assign("DATE", date("M d Y H:i:s",$key['datum']));
-					$tpl->assign("USER", $key['voornaam']." ".$key['achternaam']);
+					$tpl->assign("NAME", $key['voornaam']." ".$key['achternaam']);
 					$tpl->assign("COMMENTID",$key['commentId']);
 					$tpl->assign("LIKES",$likes);
+					$tpl->assign("POSTID",$key['commentId']);
+					$tpl->assign("PROFILEID",$key['gebruikerId']);
 					//bepaalt of de user mag editten/deleten
 					if($row['gebruikerId']==$_SESSION['id']or$_SESSION['group']==2){
 						$tpl->newBlock("editComment");
@@ -66,15 +71,17 @@
 						foreach ($comment2 as $key) {
 							open();
 							$likes2= getAmountLikes($key['commentId'],"comment");
-							$saneText=  removeeviltags($key['content']);
+							$key=removeEviltagArray($key);
 							$grav_url=getPicture($key['email']);
+							$key['content']=parsesmileys($key['content']);
 							$tpl->newBlock("comment2");
 							$tpl->assign("LINK",$grav_url);
 							$tpl->assign("POSTID",$key['id']);
-							$tpl->assign("CONTENT",$saneText);
+							$tpl->assign("CONTENT",$key['content']);
 							$tpl->assign("DATE", date("M d Y H:i:s",$key['datum']));
-							$tpl->assign("USER", $key['voornaam']." ".$key['achternaam']);
+							$tpl->assign("NAME", $key['voornaam']." ".$key['achternaam']);
 							$tpl->assign("LIKES",$likes2);
+							$tpl->assign("PROFILEID",$key['gebruikerId']);
 							if($row['gebruikerId']==$_SESSION['id']or$_SESSION['group']==2){
 								$tpl->newBlock("editComment2");
 								$tpl->assign("ID",$key['commentId']);
@@ -93,7 +100,6 @@
 		}
 		open();
 		$saneText= removeeviltags($postData['post']);
-		//$saneText= $postData['post'];
 		newPost($saneText,$_SESSION['id']);
 		header("location:index.php");
 	}
@@ -124,6 +130,7 @@
 			open();
 			changePost($id,$data['post']);
 		}
+		header('location:index.php');
 	}
 	function deletePost($id){
 		open();

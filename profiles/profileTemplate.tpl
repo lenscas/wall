@@ -71,11 +71,11 @@
 				</p>
 					<label>telephone</label>
 				<p>
-					<input type="text" name='telephone' id="telephone" value="{name}">
+					<input type="text" name='telephone' id="telephone" value="{TELEFOON}">
 				</p>
 					<label>mobiel</label>
 				<p>
-					<input type="text" name='mobiel' id="mobiel" value="{name}">
+					<input type="text" name='mobiel' id="mobiel" value="{MOBIEL}">
 				</p>
 				
 				<p>

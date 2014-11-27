@@ -36,11 +36,19 @@
 		foreach ($userData as $key => $value){
 			$userData[$key]=removeeviltags($value);
 		}
-		$birthdate=null;
-		if($profileData['birthdayDay']!=0 and$profileData['birthdayMonth']!=0 and $profileData['birthdayYear'] !=0 ){
-			$birthdate= mktime(0,0,0,$profileData['birthdayMonth'],$profileData['birthdayDay'],$profileData['birthdayYear']);
+		;
+		if($userData['firstName']!=null or $userData['lastName']!=null or $userData["mail"]!=null or $userData["password"]!=null){
+			$birthdate=null;
+			if($userData['birthdayDay']!=0 and$userData['birthdayMonth']!=0 and $userData['birthdayYear'] !=0 ){
+				$birthdate= mktime(0,0,0,$profileData['birthdayMonth'],$profileData['birthdayDay'],$profileData['birthdayYear']);
+			}
+			$personId=newPerson( $userData['firstName'], $userData['lastName'], $birthdate, $userData['address'], $userData['postalcode'], $userData['residence'], $userData['telephone'], $userData['mobiel']);
+			open();
+			newUser($userData["mail"], $userData["password"], 1,$personId);
+			header("location:index.php");
+		}else{
+			$tpl = new TemplatePower("./users/userTemplate.tpl");
+			$tpl->prepare();
+			usersnew($tpl);
 		}
-		$personId=newPerson( $userData['firstName'], $userData['lastName'], $birthdate, $userData['address'], $userData['postalcode'], $userData['residence'], $userData['telephone'], $userData['mobiel']);
-		open();
-		newUser($userData["mail"], $userData["password"], 1,$personId);
 	}

@@ -48,13 +48,16 @@
 					$grav_url=getPicture($row['email']);
 					//assignd alle benodigde waardes
 					$tpl->newBlock("row");
-					$tpl->assign("PASSWORD",$row['pasword']);
-					$tpl->assign("LINK",$grav_url);
-					$tpl->assign("ID",$row['gebruikerId']);
-					$tpl->assign("POSTID",$row['postId']);
-					$tpl->assign("CONTENT",$row['content']);
-					$tpl->assign("DATE", date("M d Y H:i:s",$row['datum']));
-					$tpl->assign("USER", $row['voornaam']." ".$row['achternaam']);
+					$tpl->assign("ID",$id);
+					$tpl->assign("MAIL",$personData['email']);
+					$tpl->assign("NAAM",$personData['voornaam']);
+					$tpl->assign("ACHTERNAAM", $personData['achternaam']);
+					$tpl->assign("ADRES",$personData['adres']);
+					setTimeSelecters($tpl);
+					$tpl->assign("MOBIEL", $personData['mobiel']);
+					$tpl->assign("TELEFOON", $personData['telefoon']);
+					$tpl->assign("POSTCODE", $personData['postcode']);
+					$tpl->assign("WOONPLAATS",$personData['woonplaats']);
 				}
 				$tpl->printToScreen();
 			}
@@ -84,7 +87,7 @@
 			if($personData['geboortedatum']==0){
 				$date=null;
 			}else{
-				$date=date("M d Y H:i:s",$personData['geboortedatum']);
+				$date=date("M d Y",$personData['geboortedatum']);
 			}
 			$tpl->assign("ID",$id);
 			$tpl->assign("MAIL",$personData['email']);
