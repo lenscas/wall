@@ -7,13 +7,13 @@
 	<body>
 		<a href="index.php?actie=logout">log-out</a>
 		<!-- START BLOCK : profile -->	
-				<p>{NAAM}</p>
-				<p>{ACHTERNAAM}</p>
-				<p>{ADRES}</p>
-				<p>{GEBOORTEDATUM}</p>
-				<p>{MOBIEL}</p>
-				<p>{TELEFOON}</p>
-				<p>{WOONPLAATS}</p>
+				<p>first name: {NAAM}</p>
+				<p>last name: {ACHTERNAAM}</p>
+				<p>adres: {ADRES}</p>
+				<p>birthdate: {GEBOORTEDATUM}</p>
+				<p>mobile: {MOBIEL}</p>
+				<p>telephone: {TELEFOON}</p>
+				<p>residence: {WOONPLAATS}</p>
 							
 				<!-- START BLOCK : edit -->
 					<a href="index.php?id={ID}&actie=editProfile">edit </a>

@@ -25,8 +25,17 @@
 		header("location:index.php");
 	}
 	//show form where users can register
-	function usersNew($tpl){
+	function usersNew($tpl,$oldValues=null){
 		$tpl->newBlock("userCreate");
+		$tpl->assign("MAIL",$oldValues['mail']);
+		$tpl->assign("NAAM",$oldValues['firstName']);
+		$tpl->assign("ACHTERNAAM", $oldValues['lastName']);
+		$tpl->assign("ADRES",$oldValues['address']);
+		setTimeSelecters($tpl);
+		$tpl->assign("MOBIEL", $oldValues['mobiel']);
+		$tpl->assign("TELEFOON", $oldValues['telephone']);
+		$tpl->assign("POSTCODE", $oldValues['postalcode']);
+		$tpl->assign("WOONPLAATS",$oldValues['residence']);
 		setTimeSelecters($tpl);
 		$tpl->printToScreen();
 	}
@@ -37,7 +46,7 @@
 			$userData[$key]=removeeviltags($value);
 		}
 		;
-		if($userData['firstName']!=null or $userData['lastName']!=null or $userData["mail"]!=null or $userData["password"]!=null){
+		if($userData['firstName']!=null and $userData['lastName']!=null and $userData["mail"]!=null and $userData["password"]!=null){
 			$birthdate=null;
 			if($userData['birthdayDay']!=0 and$userData['birthdayMonth']!=0 and $userData['birthdayYear'] !=0 ){
 				$birthdate= mktime(0,0,0,$profileData['birthdayMonth'],$profileData['birthdayDay'],$profileData['birthdayYear']);
@@ -49,6 +58,6 @@
 		}else{
 			$tpl = new TemplatePower("./users/userTemplate.tpl");
 			$tpl->prepare();
-			usersnew($tpl);
+			usersnew($tpl,$userData);
 		}
 	}
