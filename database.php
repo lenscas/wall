@@ -256,4 +256,15 @@
 		close();
 		return $result['count(*)'];
 	}
+	function checkValidMail($mail){
+		global $db;
+		echo$mail;
+		$sql="SELECT * FROM gebruiker WHERE email=:email";
+		$stmt = $db->prepare($sql);
+		$stmt->bindParam(':email',$mail, PDO::PARAM_STR);
+		$stmt->execute(); 
+		$result=$stmt->fetch(PDO::FETCH_ASSOC);
+		close();
+		return $result;
+	}
 ?>

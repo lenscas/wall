@@ -8,16 +8,16 @@
 		$tpl->printToScreen();
 	}
 	function usersCheck($userData){		
+		
 		open();
 		//echo $_POST['username'];
 		$data=checkUser($userData['username'],$userData['password']);
-		echo gettype($data);
-		print_r($data);
 		if($data){
 			$_SESSION['id']=$data['id'];
 			$_SESSION['group']=$data['groep_id'];
 		}
-		header("location:index.php");
+		print_r($_SESSION);
+		//header("location:index.php");
 	}
 	function usersLogout(){	
 		session_start();
@@ -44,13 +44,14 @@
 		open();
 		foreach ($userData as $key => $value){
 			$userData[$key]=removeeviltags($value);
-		}
-		;
-		if($userData['firstName']!=null and $userData['lastName']!=null and $userData["mail"]!=null and $userData["password"]!=null){
+		};
+		$result=checkNewUserData($userData);
+		if($result['valid']==true){
 			$birthdate=null;
 			if($userData['birthdayDay']!=0 and$userData['birthdayMonth']!=0 and $userData['birthdayYear'] !=0 ){
 				$birthdate= mktime(0,0,0,$profileData['birthdayMonth'],$profileData['birthdayDay'],$profileData['birthdayYear']);
 			}
+			open();
 			$personId=newPerson( $userData['firstName'], $userData['lastName'], $birthdate, $userData['address'], $userData['postalcode'], $userData['residence'], $userData['telephone'], $userData['mobiel']);
 			open();
 			newUser($userData["mail"], $userData["password"], 1,$personId);

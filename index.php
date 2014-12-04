@@ -12,13 +12,15 @@
 	require("other/timeStuff.php");
 	require("other/like.php");
 	require("other/emoticons.php");
+	require("other/check.php");
 
 	$actie=null;
 	if(isset($_GET['actie'])){
 		$actie=$_GET['actie'];
 	}
-	elseif(!isset($_SESSION['id'])){
-		$actie="login";
+	if(!isset($_SESSION['id'])and $actie!="loging" and $actie!="register"){
+		echo $actie;
+		$actie='login';
 	}
 	switch($actie){
 		case "delete" :
@@ -53,7 +55,9 @@
 			usersLogout();
 			break;
 		case 'login':
+			print_r($_POST);
 			if(!isset($_POST['submit'])){
+
 				$tpl = new TemplatePower("./users/userTemplate.tpl");
 				$tpl->prepare();
 				loginForm($tpl);

@@ -45,6 +45,7 @@
 					foreach ($row as $key => $value){
 						$row[$key]=removeeviltags($value);
 					}
+					$row['content']=parsesmileys($row['content']);
 					$grav_url=getPicture($row['email']);
 					//assignd alle benodigde waardes
 					$tpl->newBlock("row");
@@ -61,20 +62,24 @@
 		}
 		function changeProfile($profileData,$id){
 			$birthdate=null;
-			if($profileData['birthdayDay']!=0 and $profileData['birthdayMonth']!=0 and $profileData['birthdayYear'] !=0 ){
-				$birthdate= mktime(0,0,0,$profileData['birthdayMonth'],$profileData['birthdayDay'],$profileData['birthdayYear']);
+			$result=checkNewUserData($userData);
+			if($result['valid']==true){
+				if($profileData['birthdayDay']!=0 and $profileData['birthdayMonth']!=0 and $profileData['birthdayYear'] !=0 ){
+					$birthdate= mktime(0,0,0,$profileData['birthdayMonth'],$profileData['birthdayDay'],$profileData['birthdayYear']);
+				}
+				//remove all bad tags and alike
+				foreach ($profileData as $key => $value){
+					$profileData[$key]=removeeviltags($value);
+				}
+				open();
+				editUser($id,$profileData["mail"], $profileData["password"], 1);
+				open();
+				$personid=getPersonId($_SESSION['id']);
+				open();
+				editPerson($profileData['firstName'], $profileData['lastName'], $birthdate, $profileData['address'], $profileData['postalcode'], $profileData['residence'], $profileData['telephone'], $profileData['mobiel'],$personid['persoon_id']);
+				header("location:index.php");
 			}
-			//remove all bad tags and alike
-			foreach ($profileData as $key => $value){
-				$profileData[$key]=removeeviltags($value);
-			}
-			open();
-			editUser($id,$profileData["mail"], $profileData["password"], 1);
-			open();
-			$personid=getPersonId($_SESSION['id']);
-			open();
-			editPerson($profileData['firstName'], $profileData['lastName'], $birthdate, $profileData['address'], $profileData['postalcode'], $profileData['residence'], $profileData['telephone'], $profileData['mobiel'],$personid['persoon_id']);
-			header("location:index.php");
+			header(sprintf("location:index.php?actie=profile&id=%s",$id));
 		}
 		function editProfile($tpl,$id){
 			open();
